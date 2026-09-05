@@ -1,0 +1,53 @@
+name: balina-tara
+
+on:
+  schedule:
+    # Her 10 dakikada bir. GitHub yogun saatlerde bunu 5-15 dk geciktirebilir;
+    # dedektor artimli calistigi icin gecikme veri kaybina yol acmaz.
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  # Iki tarama ayni anda calisip birbirinin durumunu ezmesin.
+  group: balina-tara
+  cancel-in-progress: false
+
+jobs:
+  tara:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Binance bazi bulut IP'lerini cografi olarak engelliyor (HTTP 451).
+      # Bunu en basta ogren ki 10 dakika bosa gitmesin.
+      - name: Binance erisimi
+        run: python dedektor.py --baglanti-testi
+
+      - name: Tarama
+        run: python dedektor.py --tek-tur
+
+      - name: Durumu commit et
+        run: |
+          git config user.name "balina-dedektor"
+          git config user.email "actions@users.noreply.github.com"
+          git add durum.json olaylar.csv
+          if git diff --staged --quiet; then
+            echo "degisiklik yok"
+            exit 0
+          fi
+          git commit -m "tarama $(date -u +%Y-%m-%dT%H:%MZ)"
+          for deneme in 1 2 3; do
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" && \
+            git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            echo "push $deneme basarisiz, tekrar deneniyor"
+            sleep 5
+          done
+          exit 1
