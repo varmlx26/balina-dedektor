@@ -5,8 +5,12 @@ on:
     # Her 10 dakikada bir. GitHub yogun saatlerde bunu 5-15 dk geciktirebilir;
     # dedektor artimli calistigi icin gecikme veri kaybina yol acmaz.
     - cron: "*/10 * * * *"
-  # Elle calistirma: Actions > balina-tara > Run workflow.
-  # Buton push'tan birkac dakika sonra beliriyor; gorunmezse sayfayi sert yenile.
+  # Her push'ta da calis. GitHub arayuzunde "Run workflow" dugmesi bazen
+  # gec beliriyor; bu tetikleyici sayesinde butona hic gerek kalmiyor.
+  # Dongu riski yok: workflow'un GITHUB_TOKEN ile yaptigi commit'ler
+  # yeni bir calisma tetiklemez (GitHub'in yerlesik korumasi).
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
