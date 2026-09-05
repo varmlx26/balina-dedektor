@@ -34,6 +34,11 @@ jobs:
 
       # Binance bazi bulut IP'lerini cografi olarak engelliyor (HTTP 451).
       # Bunu en basta ogren ki 10 dakika bosa gitmesin.
+      # Tesihs: hangi borsa adresleri bu kosucudan acik. Asla basarisiz olmaz,
+      # sadece rapor eder - engel durumunda hangi yola gececegimizi soyler.
+      - name: Adres teshisi
+        run: python dedektor.py --host-testi
+
       - name: Binance erisimi
         run: python dedektor.py --baglanti-testi
 

@@ -215,12 +215,50 @@ def baglanti_testi():
         return 1
 
 
+ADAY_HOSTLAR = [
+    ("Binance futures (mevcut)", "https://fapi.binance.com/fapi/v1/time"),
+    ("Binance spot", "https://api.binance.com/api/v3/time"),
+    ("Binance data-api.vision", "https://data-api.binance.vision/api/v3/time"),
+    ("Binance api1", "https://api1.binance.com/api/v3/time"),
+    ("Binance api4", "https://api4.binance.com/api/v3/time"),
+    ("Bybit", "https://api.bybit.com/v5/market/time"),
+    ("OKX", "https://www.okx.com/api/v5/public/time"),
+    ("Gate.io", "https://api.gateio.ws/api/v4/spot/time"),
+]
+
+
+def host_testi():
+    """Hangi borsa uc noktalari bu IP'den erisilebiliyor? Cografi engel teshisi."""
+    print("Bu kosucudan hangi adresler acik:\n")
+    acik = []
+    for ad, url in ADAY_HOSTLAR:
+        req = urllib.request.Request(url, headers={"User-Agent": "dedektor/1.0"})
+        try:
+            with urllib.request.urlopen(req, timeout=15) as r:
+                govde = r.read()[:60].decode("utf-8", "replace")
+            print("  ACIK      %-26s %s" % (ad, govde))
+            acik.append(ad)
+        except urllib.error.HTTPError as e:
+            etiket = "ENGELLI(451)" if e.code == 451 else "HTTP %s" % e.code
+            print("  %-9s %-26s" % (etiket, ad))
+        except Exception as e:
+            print("  HATA      %-26s %s" % (ad, type(e).__name__))
+    print("\nAcik adres sayisi: %d / %d" % (len(acik), len(ADAY_HOSTLAR)))
+    if acik:
+        print("Kullanilabilir: %s" % ", ".join(acik))
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tek-tur", action="store_true", help="tek calistir ve cik")
     ap.add_argument("--baglanti-testi", action="store_true",
                     help="Binance erisilebiliyor mu, sadece onu kontrol et")
+    ap.add_argument("--host-testi", action="store_true",
+                    help="hangi borsa adresleri bu IP'den acik, teshis")
     a = ap.parse_args()
+    if a.host_testi:
+        raise SystemExit(host_testi())
     if a.baglanti_testi:
         raise SystemExit(baglanti_testi())
     tur()
