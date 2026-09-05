@@ -1,0 +1,24 @@
+Adres teshisi - 2026-09-05T14:28:04Z
+
+ERISIM:
+  ACIK         Binance futures (mevcut)   {"serverTime":1788618485213}
+  ACIK         Binance spot               {"serverTime":1788618485829}
+  ACIK         Binance data-api.vision    {"serverTime":1788618487216}
+  ACIK         Binance api1               {"serverTime":1788618488706}
+  ACIK         Binance api4               {"serverTime":1788618490088}
+  ACIK         Bybit                      {"retCode":0,"retMsg":"OK","result":{"timeSecond":
+  ACIK         OKX                        {"code":"0","data":[{"ts":"1788618491305"}],"msg":
+  ACIK         Gate.io                    {"server_time":1788618492709}
+  ACIK         MEXC futures               {"success":true,"code":0,"data":1788618493840}
+  ACIK         Bitget futures             {"code":"00000","msg":"success","requestTime":1788
+  ACIK         KuCoin futures             {"code":"200000","data":1788618495430}
+
+Acik: 11 / 11
+
+VERI YETENEGI (BANKUSDT son islemler):
+  VERI VAR     Binance fapi aggTrades     1000 islem, 17.2 dakikalik alan
+  VERI VAR     Bybit recent-trade         1000 islem, 137.1 dakikalik alan
+  VERI VAR     Gate futures trades        1000 islem, 0.1 dakikalik alan
+  VERI VAR     MEXC deals                  100 islem, 16.8 dakikalik alan
+  VERI VAR     Bitget fills                100 islem, 40.2 dakikalik alan
+  VERI VAR     KuCoin trade history        100 islem, 122.0 dakikalik alan

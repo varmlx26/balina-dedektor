@@ -224,6 +224,9 @@ ADAY_HOSTLAR = [
     ("Bybit", "https://api.bybit.com/v5/market/time"),
     ("OKX", "https://www.okx.com/api/v5/public/time"),
     ("Gate.io", "https://api.gateio.ws/api/v4/spot/time"),
+    ("MEXC futures", "https://contract.mexc.com/api/v1/contract/ping"),
+    ("Bitget futures", "https://api.bitget.com/api/v2/public/time"),
+    ("KuCoin futures", "https://api-futures.kucoin.com/api/v1/timestamp"),
 ]
 
 
@@ -255,6 +258,15 @@ def _veri_yetenegi():
         ("Gate futures trades",
          "https://api.gateio.ws/api/v4/futures/usdt/trades?contract=BANK_USDT&limit=1000",
          lambda d: [(int(float(x["create_time_ms"])), 1) for x in d]),
+        ("MEXC deals",
+         "https://contract.mexc.com/api/v1/contract/deals/BANK_USDT",
+         lambda d: [(int(x["t"]), 1) for x in d["data"]]),
+        ("Bitget fills",
+         "https://api.bitget.com/api/v2/mix/market/fills?symbol=BANKUSDT&productType=USDT-FUTURES&limit=100",
+         lambda d: [(int(x["ts"]), 1) for x in d["data"]]),
+        ("KuCoin trade history",
+         "https://api-futures.kucoin.com/api/v1/trade/history?symbol=BANKUSDTM",
+         lambda d: [(int(x["ts"]) // 1000000, 1) for x in d["data"]]),
     ]
     satirlar = []
     for ad, url, ayikla in testler:
