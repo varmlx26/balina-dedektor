@@ -48,7 +48,17 @@ jobs:
         run: |
           git config user.name "balina-dedektor"
           git config user.email "actions@users.noreply.github.com"
-          git add -A teshis.txt durum.json olaylar.csv || true
+          # Dosyalari TEK TEK ekle: git add'e var olmayan bir yol verilirse
+          # komutun tamami reddediliyor ve hicbir sey stage'lenmiyor.
+          # olaylar.csv ilk olay olusana kadar yok, o yuzden bu sart.
+          for dosya in teshis.txt durum.json olaylar.csv; do
+            if [ -f "$dosya" ]; then
+              git add "$dosya"
+              echo "eklendi: $dosya"
+            else
+              echo "yok, atlandi: $dosya"
+            fi
+          done
           if git diff --staged --quiet; then
             echo "degisiklik yok"
             exit 0
