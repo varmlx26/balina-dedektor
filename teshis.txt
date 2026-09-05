@@ -1,18 +1,24 @@
-Adres teshisi - 2026-09-05T14:18:37Z
+Adres teshisi - 2026-09-05T14:44:16Z
 
 ERISIM:
   ENGELLI(451) Binance futures (mevcut)  
   ENGELLI(451) Binance spot              
-  ACIK         Binance data-api.vision    {"serverTime":1788617917873}
+  ACIK         Binance data-api.vision    {"serverTime":1788619457543}
   ENGELLI(451) Binance api1              
   ENGELLI(451) Binance api4              
   HTTP 403     Bybit                     
-  ACIK         OKX                        {"code":"0","data":[{"ts":"1788617919118"}],"msg":
-  ACIK         Gate.io                    {"server_time":1788617919750}
+  ACIK         OKX                        {"code":"0","data":[{"ts":"1788619458991"}],"msg":
+  ACIK         Gate.io                    {"server_time":1788619459817}
+  ACIK         MEXC futures               {"success":true,"code":0,"data":1788619460464}
+  ACIK         Bitget futures             {"code":"00000","msg":"success","requestTime":1788
+  ACIK         KuCoin futures             {"code":"200000","data":1788619461179}
 
-Acik: 3 / 8
+Acik: 6 / 11
 
 VERI YETENEGI (BANKUSDT son islemler):
   ENGELLI(451) Binance fapi aggTrades    
   HTTP 403     Bybit recent-trade        
   VERI VAR     Gate futures trades        1000 islem, 0.1 dakikalik alan
+  VERI VAR     MEXC deals                  100 islem, 17.3 dakikalik alan
+  VERI VAR     Bitget fills                100 islem, 47.4 dakikalik alan
+  VERI VAR     KuCoin trade history        100 islem, 115.7 dakikalik alan
