@@ -21,9 +21,10 @@ Hiçbir eşik geçmiş performansa bakılarak seçilmedi.
 
 | Öğe | Değer | Nereden geliyor |
 | --- | --- | --- |
-| Evren | 28 USDT perpetual | Geçmişte fiilen işlem görmüş semboller; seçilmedi, okundu |
+| Veri kaynağı | **Bitget** USDT-M perpetual | Binance bu koşuculardan HTTP 451 ile engelli (ölçüldü) |
+| Evren | 26 USDT perpetual | Geçmişte fiilen işlem görmüş semboller; seçilmedi, okundu |
 | "Balina işlemi" | Son 24 saatin en büyük 3 işlemi | Nadirlik tanımın içinde; uydurulmuş dolar eşiği yok |
-| Yön | Saldırgan taraf (`aggTrade`'de alıcı maker değilse LONG) | Piyasaya vuran taraf |
+| Yön | Saldırgan taraf (`side`) | Piyasaya vuran taraf |
 | Konsensüs | Bu 3 işlemin de aynı yönde olması | Hipotezin kendi ifadesi: "üç balina" |
 | Pencere | Aralarındaki yayılım ≤ 4 saat | Hipotezin kendi ifadesi: "dört saat içinde" |
 | Onay | Open interest artmış olmalı | Yeni pozisyon mu, kapanış mı ayırmak için |
@@ -32,6 +33,35 @@ Hiçbir eşik geçmiş performansa bakılarak seçilmedi.
 Saf şansla oran: 3 işlemin aynı yönde olması 2 × (1/2)³ = **%25 sembol-gün**.
 Yani olay nadir değil, koşulludur. Test tam olarak bu koşulun bir şey öngörüp
 öngörmediğini sorar.
+
+### Neden Bitget
+
+GitHub Actions koşucuları Binance tarafından coğrafi olarak engelli — ölçüldü,
+`teshis.txt`'de duruyor: Binance futures/spot/api1/api4 hepsi HTTP 451, Bybit 403.
+Koşucudan erişilebilenler arasında evreni kapsayacak tek uygun aday Bitget:
+
+| Kaynak | Kapsam | Derinlik (100 işlem) | Sonuç |
+| --- | --- | --- | --- |
+| Bitget | 26/28 | 47.4 dk | **seçildi** |
+| MEXC | 26/28 | 17.3 dk | yedek |
+| KuCoin | 24/28 | 115.7 dk | kapsam düşük |
+| OKX | 12/28 | iyi | kapsam yarıdan az |
+| Gate | 27/28 | 0.1 dk | derinlik yetersiz |
+| Binance, Bybit | — | — | engelli |
+
+Seçim yalnızca erişilebilirlik ve kapsama göre yapıldı; hiçbir aşamada "hangisi
+daha çok kazandırıyor" sorulmadı.
+
+**Bunun bedeli:** sinyal Bitget'in tape'inden okunuyor, işlem Binance'te açılıyor.
+Yani test edilen şey artık "Binance'te balina konsensüsü" değil, "Bitget'teki
+balina akışı fiyatı öngörüyor mu". Meşru ama farklı bir iddia; ön kayda böyle yazıldı.
+
+**Fill birleştirme:** Bitget ham fill veriyor, Binance ise aynı taker emrini
+`aggTrade` olarak birleştiriyor. Aynı `ts` ve `side` taşıyan fill'ler tek emir
+sayılıp toplanıyor — yoksa "en büyük 3 işlem" emirleri değil parçalarını ölçerdi.
+
+**Open interest:** Bitget yalnızca anlık OI veriyor. 10 dakikada bir çalıştığımız
+için kendi zaman serimizi biriktirip 4 saat öncesine göre karşılaştırıyoruz.
 
 ### Neden bu tanım — ve reddedilen ilk tanım
 
