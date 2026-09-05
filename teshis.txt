@@ -1,0 +1,18 @@
+Adres teshisi - 2026-09-05T14:18:37Z
+
+ERISIM:
+  ENGELLI(451) Binance futures (mevcut)  
+  ENGELLI(451) Binance spot              
+  ACIK         Binance data-api.vision    {"serverTime":1788617917873}
+  ENGELLI(451) Binance api1              
+  ENGELLI(451) Binance api4              
+  HTTP 403     Bybit                     
+  ACIK         OKX                        {"code":"0","data":[{"ts":"1788617919118"}],"msg":
+  ACIK         Gate.io                    {"server_time":1788617919750}
+
+Acik: 3 / 8
+
+VERI YETENEGI (BANKUSDT son islemler):
+  ENGELLI(451) Binance fapi aggTrades    
+  HTTP 403     Bybit recent-trade        
+  VERI VAR     Gate futures trades        1000 islem, 0.1 dakikalik alan
