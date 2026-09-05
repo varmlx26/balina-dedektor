@@ -227,25 +227,82 @@ ADAY_HOSTLAR = [
 ]
 
 
+def _dene(url, basliksiz=False):
+    req = urllib.request.Request(url, headers={"User-Agent": "dedektor/1.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=20) as r:
+            return r.read(), None
+    except urllib.error.HTTPError as e:
+        return None, ("ENGELLI(451)" if e.code == 451 else "HTTP %d" % e.code)
+    except Exception as e:
+        return None, type(e).__name__
+
+
+def _veri_yetenegi():
+    """Sadece erisim degil: ihtiyacimiz olan islem akisini verebiliyor mu?
+
+    Bize lazim olan, bir sembolun son islemlerini toplu halde cekebilmek.
+    Her borsanin uc noktasi farkli; kac islem ve kac dakikalik alan dondugunu
+    olcuyoruz, cunku 10 dakikalik cron'da bosluk kalmamasi gerekiyor.
+    """
+    testler = [
+        ("Binance fapi aggTrades",
+         "https://fapi.binance.com/fapi/v1/aggTrades?symbol=BANKUSDT&limit=1000",
+         lambda d: [(x["T"], 1) for x in d]),
+        ("Bybit recent-trade",
+         "https://api.bybit.com/v5/market/recent-trade?category=linear&symbol=BANKUSDT&limit=1000",
+         lambda d: [(int(x["time"]), 1) for x in d["result"]["list"]]),
+        ("Gate futures trades",
+         "https://api.gateio.ws/api/v4/futures/usdt/trades?contract=BANK_USDT&limit=1000",
+         lambda d: [(int(float(x["create_time_ms"])), 1) for x in d]),
+    ]
+    satirlar = []
+    for ad, url, ayikla in testler:
+        govde, hata = _dene(url)
+        if hata:
+            satirlar.append("  %-12s %-26s" % (hata, ad))
+            continue
+        try:
+            kayitlar = ayikla(json.loads(govde))
+            if not kayitlar:
+                satirlar.append("  BOS          %-26s" % ad)
+                continue
+            zamanlar = [k[0] for k in kayitlar]
+            dakika = (max(zamanlar) - min(zamanlar)) / 60000.0
+            satirlar.append("  VERI VAR     %-26s %4d islem, %.1f dakikalik alan"
+                            % (ad, len(kayitlar), dakika))
+        except Exception as e:
+            satirlar.append("  AYRISTIRMA   %-26s %s" % (ad, type(e).__name__))
+    return satirlar
+
+
 def host_testi():
-    """Hangi borsa uc noktalari bu IP'den erisilebiliyor? Cografi engel teshisi."""
-    print("Bu kosucudan hangi adresler acik:\n")
+    """Bu IP'den hangi borsalar acik ve hangisi ise yarar veri veriyor?
+
+    Sonucu hem ekrana hem teshis.txt'ye yazar; dosya repoya commit edildigi icin
+    log erisimi olmadan da okunabilir.
+    """
+    satirlar = ["Adres teshisi - %s" % time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                "", "ERISIM:"]
     acik = []
     for ad, url in ADAY_HOSTLAR:
-        req = urllib.request.Request(url, headers={"User-Agent": "dedektor/1.0"})
-        try:
-            with urllib.request.urlopen(req, timeout=15) as r:
-                govde = r.read()[:60].decode("utf-8", "replace")
-            print("  ACIK      %-26s %s" % (ad, govde))
+        govde, hata = _dene(url)
+        if hata:
+            satirlar.append("  %-12s %-26s" % (hata, ad))
+        else:
+            satirlar.append("  ACIK         %-26s %s"
+                            % (ad, govde[:50].decode("utf-8", "replace")))
             acik.append(ad)
-        except urllib.error.HTTPError as e:
-            etiket = "ENGELLI(451)" if e.code == 451 else "HTTP %s" % e.code
-            print("  %-9s %-26s" % (etiket, ad))
-        except Exception as e:
-            print("  HATA      %-26s %s" % (ad, type(e).__name__))
-    print("\nAcik adres sayisi: %d / %d" % (len(acik), len(ADAY_HOSTLAR)))
-    if acik:
-        print("Kullanilabilir: %s" % ", ".join(acik))
+    satirlar.append("")
+    satirlar.append("Acik: %d / %d" % (len(acik), len(ADAY_HOSTLAR)))
+    satirlar.append("")
+    satirlar.append("VERI YETENEGI (BANKUSDT son islemler):")
+    satirlar += _veri_yetenegi()
+
+    metin = "\n".join(satirlar)
+    print(metin)
+    with open(os.path.join(BURASI, "teshis.txt"), "w", encoding="utf-8") as f:
+        f.write(metin + "\n")
     return 0
 
 
