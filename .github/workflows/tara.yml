@@ -5,6 +5,8 @@ on:
     # Her 10 dakikada bir. GitHub yogun saatlerde bunu 5-15 dk geciktirebilir;
     # dedektor artimli calistigi icin gecikme veri kaybina yol acmaz.
     - cron: "*/10 * * * *"
+  # Elle calistirma: Actions > balina-tara > Run workflow.
+  # Buton push'tan birkac dakika sonra beliriyor; gorunmezse sayfayi sert yenile.
   workflow_dispatch:
 
 permissions:
