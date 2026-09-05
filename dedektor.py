@@ -21,8 +21,14 @@ import urllib.request
 
 FAPI = "https://fapi.binance.com"
 BURASI = os.path.dirname(os.path.abspath(__file__))
-DURUM_DOSYA = os.path.join(BURASI, "durum.json")
-OLAY_DOSYA = os.path.join(BURASI, "olaylar.csv")
+# Yerelde calisirken repodaki dosyalara DOKUNMA. Bunlar botun urettigi ciktilar;
+# yerel test onlari degistirirse her push'ta merge catismasi cikiyor.
+# GitHub Actions ortaminda gercek adlar, disarida "yerel_" onekli kopyalar.
+_CI = os.environ.get("GITHUB_ACTIONS") == "true"
+_ON = "" if _CI else "yerel_"
+DURUM_DOSYA = os.path.join(BURASI, _ON + "durum.json")
+OLAY_DOSYA = os.path.join(BURASI, _ON + "olaylar.csv")
+TESHIS_DOSYA = os.path.join(BURASI, _ON + "teshis.txt")
 
 # --- DONDURULMUS TANIM (on-kayitla muhurlu, degistirilemez) ------------------
 PENCERE_SAAT = 4        # en buyuk 3 islem arasindaki azami yayilim
@@ -313,7 +319,7 @@ def host_testi():
 
     metin = "\n".join(satirlar)
     print(metin)
-    with open(os.path.join(BURASI, "teshis.txt"), "w", encoding="utf-8") as f:
+    with open(TESHIS_DOSYA, "w", encoding="utf-8") as f:
         f.write(metin + "\n")
     return 0
 
