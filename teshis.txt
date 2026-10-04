@@ -1,9 +1,9 @@
-Adres teshisi - 2026-10-04T08:47:16Z
+Adres teshisi - 2026-10-04T14:26:50Z
 
 ERISIM:
   ACIK         Bitget futures (mevcut)    {"code":"00000","msg":"success","requestTime":1791
   ENGELLI(451) Binance futures           
   HTTP 403     Bybit                     
-  ACIK         MEXC futures               {"success":true,"code":0,"data":1791103637202}
-  ACIK         KuCoin futures             {"code":"200000","data":1791103637374}
-  ACIK         OKX                        {"code":"0","data":[{"ts":"1791103637526"}],"msg":
+  ACIK         MEXC futures               {"success":true,"code":0,"data":1791124011949}
+  ACIK         KuCoin futures             {"code":"200000","data":1791124012289}
+  ACIK         OKX                        {"code":"0","data":[{"ts":"1791124012528"}],"msg":
